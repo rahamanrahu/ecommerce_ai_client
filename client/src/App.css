@@ -1268,6 +1268,13 @@ input { font-family: inherit; }
   height: 180px;
   overflow: hidden;
 }
+.product-img-wrap .product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
 .product-emoji-display {
   width: 100%;
   height: 100%;
@@ -1456,6 +1463,12 @@ input { font-family: inherit; }
   border-right: 1px solid var(--border);
 }
 .modal-emoji-display { font-size: 7rem; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.3)); }
+.modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
 .modal-img-badges { display: flex; gap: 8px; margin-top: 16px; }
 
 .modal-detail-side { padding: 28px; overflow-y: auto; max-height: 600px; }

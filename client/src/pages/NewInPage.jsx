@@ -3,16 +3,19 @@ import { FiBell, FiBellOff, FiX, FiCheckCircle, FiClock, FiPackage, FiTrendingUp
 import { HiSparkles } from "react-icons/hi2";
 import { MdNewReleases, MdLocalFireDepartment } from "react-icons/md";
 
+const USD_TO_INR = 82;
+const formatINR = (usd) => `₹${(usd * USD_TO_INR).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
 /* ── NEW ARRIVALS DATA ──────────────────────────── */
 const NEW_ITEMS = [
-  { id:101, name:"Holo Gradient Watch",      category:"Accessories", price:245, emoji:"⌚", color:"#6366f1", daysAgo:1, rating:4.9, reviews:42,  isNew:true,  hot:true,  desc:"Holographic gradient dial, sapphire crystal glass, 5ATM water resistant. Swiss quartz movement. Comes in premium leather strap or stainless steel bracelet." },
-  { id:102, name:"Neural Noise Cancelling Headphones", category:"Tech", price:299, emoji:"🎧", color:"#8b5cf6", daysAgo:2, rating:4.8, reviews:87, isNew:true, hot:true, desc:"40-hour ANC headphones with spatial audio, bone-conduction mic, and aptX HD. Foldable, includes premium carry case and 3 ear cushion sizes." },
-  { id:103, name:"Ceramic Pour-Over Set",    category:"Home",        price:82,  emoji:"☕", color:"#f59e0b", daysAgo:2, rating:4.7, reviews:23,  isNew:true,  hot:false, desc:"Handcrafted ceramic pour-over dripper and matching carafe. Matte glaze finish, holds 600ml. Includes 40 organic paper filters and a bamboo stand." },
-  { id:104, name:"Arc Minimalist Backpack",  category:"Fashion",     price:165, emoji:"🎒", color:"#ec4899", daysAgo:3, rating:4.8, reviews:65,  isNew:true,  hot:true,  desc:"30L waterproof recycled nylon. Hidden back pocket, laptop sleeve to 16 inches, magnetic closures. TSA-friendly. Available in 5 colourways." },
-  { id:105, name:"Foam Roller Pro",          category:"Fitness",     price:55,  emoji:"🏃", color:"#22c55e", daysAgo:3, rating:4.6, reviews:34,  isNew:true,  hot:false, desc:"High-density EVA foam with textured grid pattern for myofascial release. 33cm x 14cm. Supports up to 140kg. Includes online recovery guide." },
-  { id:106, name:"Smart F Monitor",      category:"Home",        price:49,  emoji:"🪴", color:"#84cc16", daysAgo:4, rating:4.5, reviews:19,  isNew:true,  hot:false, desc:"Bluetooth soil sensor monitors moisture, light, nutrients, and temperature. App alerts when your plant needs water. Works with 6000+ plant species." },
-  { id:107, name:"Gradient Desk Lamp",       category:"Home",        price:95,  emoji:"💡", color:"#06b6d4", daysAgo:5, rating:4.7, reviews:51,  isNew:true,  hot:false, desc:"Touch-dimming LED desk lamp with USB-C charging pad base, 5 colour temperatures, and circadian rhythm mode. 50,000 hour lifespan." },
-  { id:108, name:"Carbon Fibre Card Wallet", category:"Accessories", price:68,  emoji:"💳", color:"#374151", daysAgo:5, rating:4.8, reviews:78,  isNew:true,  hot:true,  desc:"RFID-blocking carbon fibre wallet holds 6–12 cards plus cash. Spring-loaded card ejector. 0.6cm thin, 28g. Lifetime warranty." },
+  { id:101, name:"Holo Gradient Watch",      category:"Accessories", price:245, emoji:"⌚", color:"#6366f1", image:"https://images.unsplash.com/photo-1579586337270-0aed1d4c7c04?auto=format&fit=crop&w=1000&q=80", daysAgo:1, rating:4.9, reviews:42,  isNew:true,  hot:true,  desc:"Holographic gradient dial, sapphire crystal glass, 5ATM water resistant. Swiss quartz movement. Comes in premium leather strap or stainless steel bracelet." },
+  { id:102, name:"Neural Noise Cancelling Headphones", category:"Tech", price:299, emoji:"🎧", color:"#8b5cf6", image:"https://images.unsplash.com/photo-1518443169507-5568c9de0298?auto=format&fit=crop&w=1000&q=80", daysAgo:2, rating:4.8, reviews:87, isNew:true, hot:true, desc:"40-hour ANC headphones with spatial audio, bone-conduction mic, and aptX HD. Foldable, includes premium carry case and 3 ear cushion sizes." },
+  { id:103, name:"Ceramic Pour-Over Set",    category:"Home",        price:82,  emoji:"☕", color:"#f59e0b", image:"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1000&q=80", daysAgo:2, rating:4.7, reviews:23,  isNew:true,  hot:false, desc:"Handcrafted ceramic pour-over dripper and matching carafe. Matte glaze finish, holds 600ml. Includes 40 organic paper filters and a bamboo stand." },
+  { id:104, name:"Arc Minimalist Backpack",  category:"Fashion",     price:165, emoji:"🎒", color:"#ec4899", image:"https://images.unsplash.com/photo-1600181952852-52f3c09f8bb4?auto=format&fit=crop&w=1000&q=80", daysAgo:3, rating:4.8, reviews:65,  isNew:true,  hot:true,  desc:"30L waterproof recycled nylon. Hidden back pocket, laptop sleeve to 16 inches, magnetic closures. TSA-friendly. Available in 5 colourways." },
+  { id:105, name:"Foam Roller Pro",          category:"Fitness",     price:55,  emoji:"🏃", color:"#22c55e", image:"https://images.unsplash.com/photo-1571019613619-2a7f7e5c2b1a?auto=format&fit=crop&w=1000&q=80", daysAgo:3, rating:4.6, reviews:34,  isNew:true,  hot:false, desc:"High-density EVA foam with textured grid pattern for myofascial release. 33cm x 14cm. Supports up to 140kg. Includes online recovery guide." },
+  { id:106, name:"Smart F Monitor",      category:"Home",        price:49,  emoji:"🪴", color:"#84cc16", image:"https://images.unsplash.com/photo-1595433707802-8f0ed6a9055c?auto=format&fit=crop&w=1000&q=80", daysAgo:4, rating:4.5, reviews:19,  isNew:true,  hot:false, desc:"Bluetooth soil sensor monitors moisture, light, nutrients, and temperature. App alerts when your plant needs water. Works with 6000+ plant species." },
+  { id:107, name:"Gradient Desk Lamp",       category:"Home",        price:95,  emoji:"💡", color:"#06b6d4", image:"https://images.unsplash.com/photo-1523408283687-5a7349f2aa06?auto=format&fit=crop&w=1000&q=80", daysAgo:5, rating:4.7, reviews:51,  isNew:true,  hot:false, desc:"Touch-dimming LED desk lamp with USB-C charging pad base, 5 colour temperatures, and circadian rhythm mode. 50,000 hour lifespan." },
+  { id:108, name:"Carbon Fibre Card Wallet", category:"Accessories", price:68,  emoji:"💳", color:"#374151", image:"https://images.unsplash.com/photo-1495111922310-9e0b42b72f94?auto=format&fit=crop&w=1000&q=80", daysAgo:5, rating:4.8, reviews:78,  isNew:true,  hot:true,  desc:"RFID-blocking carbon fibre wallet holds 6–12 cards plus cash. Spring-loaded card ejector. 0.6cm thin, 28g. Lifetime warranty." },
 ];
 
 const UPCOMING = [
@@ -109,7 +112,11 @@ function NewItemCard({ item, onNotify, wishlist, onWishlist }) {
       onMouseLeave={() => setHovered(false)}
     >
       <div className="product-img-wrap">
-        <div className="product-emoji-display">{item.emoji}</div>
+        {item.image ? (
+          <img className="product-image" src={item.image} alt={item.name} />
+        ) : (
+          <div className="product-emoji-display">{item.emoji}</div>
+        )}
         <div className="new-item-arrival-badge">
           <MdNewReleases size={12} /> {daysText}
         </div>
@@ -137,7 +144,7 @@ function NewItemCard({ item, onNotify, wishlist, onWishlist }) {
         </div>
         <p className="new-item-desc">{item.desc.substring(0, 90)}…</p>
         <div className="product-price-row">
-          <span className="product-price">${item.price}</span>
+          <span className="product-price">{formatINR(item.price)}</span>
           <span className="new-price-badge">New</span>
         </div>
       </div>

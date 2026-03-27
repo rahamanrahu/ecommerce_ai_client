@@ -52,11 +52,11 @@ const TEAM = [
 /* ── TIMELINE ───────────────────────────────────── */
 const TIMELINE = [
   { year:"2019", title:"The Idea", desc:"Aisha and Marcus met at a hackathon and sketched Nexus on a napkin — a single platform replacing 8 tools.", color:"#6366f1" },
-  { year:"2020", title:"Seed Round", desc:"Raised $2.1M from Y Combinator W20. Built the core team of 5 and shipped the MVP in 90 days.", color:"#3b82f6" },
+  { year:"2020", title:"Seed Round", desc:"Raised ₹170 crore from Y Combinator W20. Built the core team of 5 and shipped the MVP in 90 days.", color:"#3b82f6" },
   { year:"2021", title:"Product-Market Fit", desc:"10,000 teams signed up in month 1. Featured in TechCrunch. Grew to 30 employees across 3 continents.", color:"#22c55e" },
-  { year:"2022", title:"Series A", desc:"Raised $18M Series A led by Sequoia. Launched Collections and marketplace with 500+ curated products.", color:"#f59e0b" },
+  { year:"2022", title:"Series A", desc:"Raised ₹1,476 crore Series A led by Sequoia. Launched Collections and marketplace with 500+ curated products.", color:"#f59e0b" },
   { year:"2023", title:"Global Expansion", desc:"Expanded to 47 countries. Launched Nexus Pro and Enterprise tiers. 1M+ active users milestone.", color:"#ec4899" },
-  { year:"2024", title:"Today", desc:"50K+ teams, $120M ARR, 120 employees worldwide. Launching AI-powered features and Nexus Platform v2.0.", color:"#8b5cf6" },
+  { year:"2024", title:"Today", desc:"50K+ teams, ₹9,840 crore ARR, 120 employees worldwide. Launching AI-powered features and Nexus Platform v2.0.", color:"#8b5cf6" },
 ];
 
 /* ── VALUES DATA ────────────────────────────────── */

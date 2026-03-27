@@ -2,17 +2,18 @@ import React, { useState, useEffect } from "react";
 import { FiTag, FiClock, FiZap, FiShoppingCart, FiHeart, FiStar, FiPercent, FiAlertCircle } from "react-icons/fi";
 import { MdLocalFireDepartment, MdFlashOn } from "react-icons/md";
 import { HiSparkles } from "react-icons/hi2";
-
+const USD_TO_INR = 82;
+const formatINR = (usd) => `₹${(usd * USD_TO_INR).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 /* ── SALE PRODUCTS ──────────────────────────────── */
 const SALE_PRODUCTS = [
-  { id:301, name:"4K Gaming Monitor 27\"",    category:"Tech",    price:299, originalPrice:549, emoji:"🖥️", color:"#6366f1", rating:4.8, reviews:1234, stock:3,  hoursLeft:4,  badge:"Flash Sale",   desc:"IPS panel, 144Hz, 1ms response time, G-Sync compatible. USB-C 65W charging, 4 HDMI ports. Factory calibrated." },
-  { id:302, name:"Leather Chelsea Boots",     category:"Fashion", price:89,  originalPrice:210, emoji:"👢", color:"#f59e0b", rating:4.7, reviews:876,  stock:7,  hoursLeft:18, badge:"Weekend Deal",  desc:"Full-grain calfskin leather, YKK zip, leather insole. Goodyear-welted sole. Handmade in Spain. Lasts decades with care." },
-  { id:303, name:"Air Purifier HEPA H13",     category:"Home",    price:129, originalPrice:249, emoji:"🌬️", color:"#22c55e", rating:4.9, reviews:2341, stock:12, hoursLeft:36, badge:"Best Deal",     desc:"H13 True HEPA + activated carbon filter. Cleans 50m² in 12 min. CADR 350 m³/h. Whisper-quiet at 25dB. PM2.5 sensor." },
-  { id:304, name:"Bamboo Cutting Board Set",  category:"Home",    price:38,  originalPrice:75,  emoji:"🪵", color:"#84cc16", rating:4.6, reviews:543,  stock:22, hoursLeft:48, badge:"Clearance",    desc:"3-piece FSC bamboo set (S/M/L) with juice grooves, anti-slip feet, and hanging holes. Dishwasher safe. Naturally antimicrobial." },
-  { id:305, name:"Wireless Charging Pad 3-in-1", category:"Tech", price:55, originalPrice:110, emoji:"⚡", color:"#3b82f6", rating:4.7, reviews:987,  stock:8,  hoursLeft:12, badge:"Flash Sale",   desc:"Simultaneously charges phone (15W MagSafe), AirPods, and Apple Watch. LED indicator, anti-slip base, includes 45W adapter." },
-  { id:306, name:"Merino Wool Crew Sweater",  category:"Fashion", price:65,  originalPrice:145, emoji:"🧶", color:"#8b5cf6", rating:4.8, reviews:432,  stock:15, hoursLeft:48, badge:"Season Sale",  desc:"100% extra-fine Merino wool, 18.5 micron. Temperature regulating, itch-free. Ethically sourced from New Zealand farms. Machine washable." },
-  { id:307, name:"Protein Shaker Pro Bundle", category:"Fitness", price:28,  originalPrice:55,  emoji:"🥤", color:"#ef4444", rating:4.5, reviews:2109, stock:50, hoursLeft:72, badge:"Bundle Deal",  desc:"700ml Tritan shaker with BlenderBall, 3 storage compartments, leak-proof lid. Includes 2 replacement lids and bonus resistance band." },
-  { id:308, name:"Espresso Machine Nano",     category:"Home",    price:165, originalPrice:320, emoji:"☕", color:"#f97316", rating:4.9, reviews:1543, stock:4,  hoursLeft:6,  badge:"Flash Sale",   desc:"15-bar pressure, 20g portafilter, steam wand, 1.2L tank. 25-second heat-up. Compact 15cm width. Makes café-quality espresso at home." },
+  { id:301, name:"4K Gaming Monitor 27\"",    category:"Tech",    price:299, originalPrice:549, emoji:"🖥️", color:"#6366f1", rating:4.8, reviews:1234, stock:3,  hoursLeft:4,  badge:"Flash Sale",   image:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80", desc:"IPS panel, 144Hz, 1ms response time, G-Sync compatible. USB-C 65W charging, 4 HDMI ports. Factory calibrated." },
+  { id:302, name:"Leather Chelsea Boots",     category:"Fashion", price:89,  originalPrice:210, emoji:"👢", color:"#f59e0b", rating:4.7, reviews:876,  stock:7,  hoursLeft:18, badge:"Weekend Deal",  image:"https://images.unsplash.com/photo-1528701800485-5c5a65a35edc?auto=format&fit=crop&w=1000&q=80", desc:"Full-grain calfskin leather, YKK zip, leather insole. Goodyear-welted sole. Handmade in Spain. Lasts decades with care." },
+  { id:303, name:"Air Purifier HEPA H13",     category:"Home",    price:129, originalPrice:249, emoji:"🌬️", color:"#22c55e", rating:4.9, reviews:2341, stock:12, hoursLeft:36, badge:"Best Deal",     image:"https://images.unsplash.com/photo-1585386959984-a415522a14d3?auto=format&fit=crop&w=1000&q=80", desc:"H13 True HEPA + activated carbon filter. Cleans 50m² in 12 min. CADR 350 m³/h. Whisper-quiet at 25dB. PM2.5 sensor." },
+  { id:304, name:"Bamboo Cutting Board Set",  category:"Home",    price:38,  originalPrice:75,  emoji:"🪵", color:"#84cc16", rating:4.6, reviews:543,  stock:22, hoursLeft:48, badge:"Clearance",    image:"https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1000&q=80", desc:"3-piece FSC bamboo set (S/M/L) with juice grooves, anti-slip feet, and hanging holes. Dishwasher safe. Naturally antimicrobial." },
+  { id:305, name:"Wireless Charging Pad 3-in-1", category:"Tech", price:55, originalPrice:110, emoji:"⚡", color:"#3b82f6", rating:4.7, reviews:987,  stock:8,  hoursLeft:12, badge:"Flash Sale",   image:"https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1000&q=80", desc:"Simultaneously charges phone (15W MagSafe), AirPods, and Apple Watch. LED indicator, anti-slip base, includes 45W adapter." },
+  { id:306, name:"Merino Wool Crew Sweater",  category:"Fashion", price:65,  originalPrice:145, emoji:"🧶", color:"#8b5cf6", rating:4.8, reviews:432,  stock:15, hoursLeft:48, badge:"Season Sale",  image:"https://images.unsplash.com/photo-1520986606214-8b456906c813?auto=format&fit=crop&w=1000&q=80", desc:"100% extra-fine Merino wool, 18.5 micron. Temperature regulating, itch-free. Ethically sourced from New Zealand farms. Machine washable." },
+  { id:307, name:"Protein Shaker Pro Bundle", category:"Fitness", price:28,  originalPrice:55,  emoji:"🥤", color:"#ef4444", rating:4.5, reviews:2109, stock:50, hoursLeft:72, badge:"Bundle Deal",  image:"https://images.unsplash.com/photo-1594737625906-524a3cc9181a?auto=format&fit=crop&w=1000&q=80", desc:"700ml Tritan shaker with BlenderBall, 3 storage compartments, leak-proof lid. Includes 2 replacement lids and bonus resistance band." },
+  { id:308, name:"Espresso Machine Nano",     category:"Home",    price:165, originalPrice:320, emoji:"☕", color:"#f97316", rating:4.9, reviews:1543, stock:4,  hoursLeft:6,  badge:"Flash Sale",   image:"https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1000&q=80", desc:"15-bar pressure, 20g portafilter, steam wand, 1.2L tank. 25-second heat-up. Compact 15cm width. Makes café-quality espresso at home." },
 ];
 
 /* ── COUNTDOWN TIMER ────────────────────────────── */
@@ -68,7 +69,11 @@ function SaleCard({ product, wishlist, onWishlist, featured }) {
       onMouseLeave={() => setHovered(false)}
     >
       <div className="product-img-wrap">
-        <div className="product-emoji-display">{product.emoji}</div>
+        {product.image ? (
+          <img className="product-image" src={product.image} alt={product.name} />
+        ) : (
+          <div className="product-emoji-display">{product.emoji}</div>
+        )}
         <div className="sale-discount-ribbon" style={{ background: isFlash ? "#ef4444" : product.color }}>
           <FiPercent size={11} />{discount}%
         </div>
@@ -98,9 +103,9 @@ function SaleCard({ product, wishlist, onWishlist, featured }) {
         </div>
 
         <div className="product-price-row">
-          <span className="product-price sale-price" style={{ color: product.color }}>${product.price}</span>
-          <span className="product-original">${product.originalPrice}</span>
-          <span className="save-tag">Save ${product.originalPrice - product.price}</span>
+          <span className="product-price sale-price" style={{ color: product.color }}>{formatINR(product.price)}</span>
+          <span className="product-original">{formatINR(product.originalPrice)}</span>
+          <span className="save-tag">Save {formatINR(product.originalPrice - product.price)}</span>
         </div>
 
         <CountdownTimer hoursLeft={product.hoursLeft} color={product.color} />
@@ -151,7 +156,7 @@ export default function SalePage() {
         <div className="page-hero-content">
           <span className="hero-eyebrow sale-eyebrow"><MdLocalFireDepartment size={14} /> Limited Time Offers</span>
           <h1 className="sale-hero-title">Mega Sale <span className="gradient-text-red">Event</span></h1>
-          <p>Up to <strong style={{ color: "#ef4444", fontSize: "1.2em" }}>50% off</strong> — save up to ${maxSave} on premium products</p>
+          <p>Up to <strong style={{ color: "#ef4444", fontSize: "1.2em" }}>50% off</strong> — save up to {formatINR(maxSave)} on premium products</p>
         </div>
       </div>
 
@@ -163,7 +168,7 @@ export default function SalePage() {
             <div className="flash-tags">
               {flashDeals.map(p => (
                 <span key={p.id} className="flash-tag">
-                  {p.emoji} {p.name} — <strong style={{ color: "#ef4444" }}>${p.price}</strong>
+                    {p.emoji} {p.name} — <strong style={{ color: "#ef4444" }}>{formatINR(p.price)}</strong>
                 </span>
               ))}
             </div>
