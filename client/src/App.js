@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate, Link } from "react-router-dom";
 import { FiSun, FiMoon, FiMenu, FiX, FiLogOut } from "react-icons/fi";
 import { MdRocketLaunch } from "react-icons/md";
+import axios from "axios";
+import API_BASE_URL, { API_ENDPOINTS } from "./api";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -27,34 +29,51 @@ const ThemeProvider = ({ children }) => {
 export const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
-const DB_KEY = "nexus_users_db";
 const SESSION_KEY = "nexus_session";
+const TOKEN_KEY = "nexus_token";
 
-const mockApi = {
-  getUsers: () => { try { return JSON.parse(localStorage.getItem(DB_KEY)) || []; } catch { return []; } },
-  saveUsers: (u) => localStorage.setItem(DB_KEY, JSON.stringify(u)),
-  register: ({ name, email, password }) => {
-    const users = mockApi.getUsers();
-    if (users.find(u => u.email.toLowerCase() === email.toLowerCase()))
-      return { success: false, message: "An account with this email already exists." };
-    const newUser = {
-      id: `usr_${Date.now()}`, name, email: email.toLowerCase(), password,
-      createdAt: new Date().toISOString(),
-      stats: { projects: Math.floor(Math.random()*12)+1, tasks: Math.floor(Math.random()*60)+10, teamMembers: Math.floor(Math.random()*8)+2, completionRate: Math.floor(Math.random()*40)+60 },
-    };
-    users.push(newUser); mockApi.saveUsers(users);
-    return { success: true, user: newUser };
+const api = {
+  login: async ({ email, password }) => {
+    try {
+      console.log('Making login request to:', `${API_BASE_URL}${API_ENDPOINTS.AUTH.LOGIN}`);
+      console.log('Request body:', { email, password });
+
+      const response = await axios.post(`${API_BASE_URL}${API_ENDPOINTS.AUTH.LOGIN}`, {
+        email,
+        password
+      });
+
+      console.log('Login response:', response.data);
+
+      return {
+        success: true,
+        user: response.data.data.user,
+        token: response.data.data.token
+      };
+    } catch (error) {
+      console.error('Login error:', error.response?.data || error.message);
+
+      const message = error.response?.data?.message || 'Login failed. Please try again.';
+      return { success: false, message };
+    }
   },
-  login: ({ email, password }) => {
-    const users = mockApi.getUsers();
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (!user) return { success: false, message: "No account found with this email." };
-    if (user.password !== password) return { success: false, message: "Incorrect password. Please try again." };
-    return { success: true, user };
+  saveSession: (user, token) => {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+    localStorage.setItem(TOKEN_KEY, token);
   },
-  saveSession: (u) => localStorage.setItem(SESSION_KEY, JSON.stringify(u)),
-  getSession: () => { try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; } },
-  clearSession: () => localStorage.removeItem(SESSION_KEY),
+  getSession: () => {
+    try {
+      const user = JSON.parse(localStorage.getItem(SESSION_KEY));
+      const token = localStorage.getItem(TOKEN_KEY);
+      return user && token ? { user, token } : null;
+    } catch {
+      return null;
+    }
+  },
+  clearSession: () => {
+    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+  },
 };
 
 const GuestRoute = ({ children }) => {
@@ -65,10 +84,30 @@ const GuestRoute = ({ children }) => {
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  useEffect(() => { const s = mockApi.getSession(); if (s) setCurrentUser(s); setLoading(false); }, []);
-  const login = (c) => { const r = mockApi.login(c); if (r.success) { mockApi.saveSession(r.user); setCurrentUser(r.user); } return r; };
-  const register = (d) => { const r = mockApi.register(d); if (r.success) { mockApi.saveSession(r.user); setCurrentUser(r.user); } return r; };
-  const logout = () => { mockApi.clearSession(); setCurrentUser(null); };
+  useEffect(() => {
+    const s = api.getSession();
+    if (s) {
+      setCurrentUser(s.user);
+      // Set axios default header for future requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${s.token}`;
+    }
+    setLoading(false);
+  }, []);
+  const login = async (c) => {
+    const r = await api.login(c);
+    if (r.success) {
+      api.saveSession(r.user, r.token);
+      setCurrentUser(r.user);
+      // Set axios default header
+      axios.defaults.headers.common['Authorization'] = `Bearer ${r.token}`;
+    }
+    return r;
+  };
+  const register = async (d) => {
+    // TODO: Implement register API call
+    return { success: false, message: "Registration not implemented yet" };
+  };
+  const logout = () => { api.clearSession(); setCurrentUser(null); delete axios.defaults.headers.common['Authorization']; };
   if (loading) return <div className="app-loader"><div className="loader-ring" /></div>;
   return <AuthContext.Provider value={{ currentUser, login, logout, register }}>{children}</AuthContext.Provider>;
 };

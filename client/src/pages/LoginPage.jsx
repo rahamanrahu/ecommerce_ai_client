@@ -41,15 +41,18 @@ export default function LoginPage() {
     if (Object.keys(errs).length) { setErrors(errs); return; }
 
     setLoading(true);
-    // Simulate network delay
-    await new Promise((r) => setTimeout(r, 800));
-    const result = login({ email: form.email, password: form.password });
-    setLoading(false);
-
-    if (result.success) {
-      navigate("/", { replace: true });
-    } else {
-      setApiError(result.message);
+    try {
+      const result = await login({ email: form.email, password: form.password });
+      if (result.success) {
+        navigate("/", { replace: true });
+      } else {
+        setApiError(result.message);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setApiError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 

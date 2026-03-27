@@ -12,16 +12,20 @@ const config = require('../env/config');
  */
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(config.database.uri, {
-            // Mongoose 6+ doesn't need these options, but keeping for clarity
-            // useNewUrlParser: true,
-            // useUnifiedTopology: true,
-        });
+        const conn = await mongoose.connect(config.database.uri);
 
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
-        console.log(`Database Name: ${conn.connection.name}`);
+        console.log('MongoDB connected ✅');
+        console.log(`Host: ${conn.connection.host}`);
+        console.log(`Database: ${conn.connection.name}`);
     } catch (error) {
-        console.error(`Database Connection Error: ${error.message}`);
+        console.error('MongoDB Connection Failed ❌');
+        console.error(`Error: ${error.message}`);
+        
+        if (error.message.includes('IP that isn\'t whitelisted')) {
+            console.error('\n👉 Please whitelist your IP address in MongoDB Atlas:');
+            console.error('   https://cloud.mongodb.com -> Network Access -> Add IP Address');
+        }
+        
         process.exit(1);
     }
 };
