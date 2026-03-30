@@ -31,7 +31,7 @@ const getAllProducts = async (req, res) => {
         }
 
         if (isActive !== undefined) {
-            filter.isActive = isActive === 'true';
+            filter.isActive = isActive === 'true' || isActive === true;
         }
 
         if (minPrice || maxPrice) {
